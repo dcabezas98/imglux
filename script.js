@@ -17,7 +17,7 @@ function run(inimg){
 }
 
 init().then(() => {
-    document.getElementById("prog").innerHTML = "READY! :D\nThe model has been loaded, you can now submit a dark photo to light it up.";
+    document.getElementById("prog").innerHTML = "READY! :D<br/>The model has been loaded, you can now submit a dark photo to light it up.";
     //console.log(generator.summary());
 
     ready = true;
