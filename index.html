@@ -16,10 +16,12 @@
 
   <body>
 
-    <p>Loading: <span id="prog"></span> %</p>
+    <p id="prog"></p>
     
-    <form>
-      <input type="image" id="submit_img" />
+    <form id="subm" action="javascript:;" onsubmit="run(this);">
+      <label for="img">Select image:</label>
+      <input type="image" accept=".jpg, .jpeg, .png, .tiff, .tif" id="submited_img" name="submited_img"/>
+      <input type="submit" name="Submit" value="Send" style="cursor:pointer"/>
     </form>
 
   </body>
