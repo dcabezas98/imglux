@@ -2,7 +2,7 @@
 var generator;
 
 function progress(fraction){
-    document.getElementById("prog").innerHTML = parseInt(intfraction*100);
+    document.getElementById("prog").innerHTML = parseInt(fraction*100);
 }
 
 async function init(){
