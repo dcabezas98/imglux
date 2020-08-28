@@ -9,6 +9,11 @@ async function init(){
     generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
 }
 
-init();
+init().then(() => {
+    document.getElementById("prog").innerHTML = 'READY!';
+    console.log(generator.summary());
+});
 
-console.log(generator.summary());
+
+
+
