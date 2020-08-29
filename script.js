@@ -1,7 +1,7 @@
 
 var generator;
 var tgt, files;
-var inputImage;
+var imageData, inputImage;
 var canvas, ctx;
 var fr, fr2;
 
@@ -25,34 +25,39 @@ async function init(){
     if (FileReader){
 	fr = new FileReader();
 	fr.onload = () => showImage(fr);
-	fr2 = new FileReader();
-	fr2.onload = () => getImageData(fr2);
     }
     else
 	alert("Sorry! :(\nCannot load image: no HTML5 File API support.\nMaybe your browser is too old.")
 }
 
 function showImage(fileReader) {
-    var img = document.getElementById("inimg");
+    var imgDisplay = document.getElementById("inimg");
+    var img = document.getElementById("auximg");
+    imgDisplay.onload = () => getImageData(imgDisplay);
+    img.onload = () => getImageData(img);
+    imgDisplay = fileReader.result;
     img.src = fileReader.result;
-    ctx.drawImage(img, 0, 0);
 }
 
 function getImageData(fileReader) {
-    inputImage = fileReader.result;
+    ctx.drawImage(imgdisplay, 0, 0);
+    ctx.drawImage(img, 0, 0);
+    imgWidth=imgdisplay.width;
+    imgHeight=imgisplay.height;
+    console.log("imgWidth: "+imgWidth);
+    console.log("imgHeight: "+imgHeight);
+    imageData = ctx.getImageData(0,0, imgWidth, imgHeight).data;
 }
 
 function run(){
     // FileReader support
-    if (files && files.length) {
-        // Read submited image as URL to display it
+    if (files && files.length)
         fr.readAsDataURL(files[0]);
-	// Read submited image as Array to feed it to the model
-	fr2.readAsArrayBuffer(files[0]);
-    }
     else {alert("Sorry! :(\n Cannot load image: something is wrong with the submited file.")}
 
     document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)"
+
+    inputImage = imgData.data.toString();
 
     console.log(inputImage);
 
