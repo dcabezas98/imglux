@@ -48,7 +48,7 @@ function run(){
         // Read submited image as URL to display it
         fr.readAsDataURL(files[0]);
 	// Read submited image as Array to feed it to the model
-	fr.readAsArrayBuffer(files[0]);
+	fr2.readAsArrayBuffer(files[0]);
     }
     else {alert("Sorry! :(\n Cannot load image: something is wrong with the submited file.")}
 
