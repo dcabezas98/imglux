@@ -1,6 +1,5 @@
 
 var generator;
-var ready = false;
 
 function progress(fraction){
     document.getElementById("prog").innerHTML = "Loading model: "+parseInt(fraction*100).toString()+" %";
@@ -20,8 +19,9 @@ init().then(() => {
     document.getElementById("prog").innerHTML = "READY! :D<br/>The model has been loaded, you can now submit a dark photo to light it up.";
     //console.log(generator.summary());
 
-    ready = true;
     document.getElementById("subm").style.visibility="visible";
+}, () => {
+    document.getElementById("prog").innerHTML = "Oh No! :(<br/>An error occurred while loading the model. Please refresh the page.";
 });
 
 
