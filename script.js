@@ -26,8 +26,10 @@ async function init(){
 	fr = new FileReader();
 	fr.onload = () => showImage(fr);
     }
-    else
-	alert("Sorry! :(\nCannot load image: no HTML5 File API support.\nMaybe your browser is too old.")
+    else{
+	alert("Sorry! :(\nCannot load image: no HTML5 File API support.\nMaybe your browser is too old.");
+	return;
+    }
 }
 
 function showImage(fileReader) {
@@ -39,11 +41,10 @@ function showImage(fileReader) {
     img.src = fileReader.result;
 }
 
-function getImageData(fileReader) {
-    ctx.drawImage(imgdisplay, 0, 0);
+function getImageData(img) {
     ctx.drawImage(img, 0, 0);
-    imgWidth=imgdisplay.width;
-    imgHeight=imgisplay.height;
+    imgWidth=img.width;
+    imgHeight=img.height;
     console.log("imgWidth: "+imgWidth);
     console.log("imgHeight: "+imgHeight);
     imageData = ctx.getImageData(0,0, imgWidth, imgHeight).data;
@@ -53,11 +54,13 @@ function run(){
     // FileReader support
     if (files && files.length)
         fr.readAsDataURL(files[0]);
-    else {alert("Sorry! :(\n Cannot load image: something is wrong with the submited file.")}
+    else {
+	alert("Sorry! :(\n Cannot load image: something is wrong with the submited file.");
+	return}
 
     document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)"
 
-    inputImage = imgData.data.toString();
+    inputImage = imageData.data.toString();
 
     console.log(inputImage);
 
