@@ -16,7 +16,7 @@ async function init(){
     canvas = document.createElement("canvas");
     ctx = canvas.getContext("2d");
     
-    document.getElementById("inimg").onchange = function (evt){
+    document.getElementById("img").onchange = function (evt){
 	tgt = evt.target || window.event.srcElement;
 	files = tgt.files;	
     }
