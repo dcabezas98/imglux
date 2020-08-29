@@ -11,12 +11,12 @@ function progress(fraction){
 async function init(){
     //document.getElementById("subm").style.visibility="hidden";
 
+    generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
+    
     document.getElementById("img").onchange = function (evt){
 	tgt = evt.target || window.event.srcElement;
 	files = tgt.files;	
     }
-    
-    generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
 }
 
 function showImage(fileReader) {
@@ -27,7 +27,7 @@ function showImage(fileReader) {
 
 function getImageData(img) {
     ctx.drawImage(img, 0, 0);
-    imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+    image = ctx.getImageData(0, 0, img.width, img.height).data;
     console.log("image data:", image);
 }
 
