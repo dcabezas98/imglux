@@ -33,16 +33,28 @@ async function init(){
 }
 
 function showImage(fileReader) {
-    var imgDisplay = document.getElementById("inimg");
+    //var imgDisplay = document.getElementById("inimg");
     var img = document.getElementById("auximg");
-    imgDisplay.onload = () => getImageData(imgDisplay);
+    //imgDisplay.onload = () => getImageData(imgDisplay);
     img.onload = () => getImageData(img);
-    imgDisplay = fileReader.result;
+    //imgDisplay.src = fileReader.result;
     img.src = fileReader.result;
 }
 
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
 function getImageData(img) {
-    ctx.drawImage(img, 0, 0);
+    ctx.drawImage(img, 0,0, 0, 0);
+    const sleep = (milliseconds) => {
+	return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
     imgWidth=img.width;
     imgHeight=img.height;
     console.log("imgWidth: "+imgWidth);
@@ -60,7 +72,7 @@ function run(){
 
     document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)"
 
-    inputImage = imageData.data.toString();
+    inputImage = imageData.toString();
 
     console.log(inputImage);
 
