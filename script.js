@@ -3,6 +3,7 @@ var generator;
 var tgt, files;
 var inputImage;
 var canvas, ctx;
+var fr, fr2;
 
 function progress(fraction){
     document.getElementById("prog").innerHTML = "Loading model: "+parseInt(fraction*100).toString()+" %. Please wait.";
@@ -20,6 +21,15 @@ async function init(){
 	tgt = evt.target || window.event.srcElement;
 	files = tgt.files;	
     }
+
+    if (FileReader){
+	fr = new FileReader();
+	fr.onload = () => showImage(fr);
+	fr2 = new FileReader();
+	fr2.onload = () => getImageData(fr2);
+    }
+    else
+	alert("Sorry! :(\nCannot load image: no HTML5 File API support.\nMaybe your browser is too old.")
 }
 
 function showImage(fileReader) {
@@ -29,27 +39,24 @@ function showImage(fileReader) {
 }
 
 function getImageData(fileReader) {
-    inputImage = reader.result;
+    inputImage = fileReader.result;
 }
 
 function run(){
     // FileReader support
-	if (FileReader && files && files.length) {
-            var fr = new FileReader(); // Read submited image as URL to display it
-            fr.onload = () => showImage(fr);
-            fr.readAsDataURL(files[0]);
-	    fr = new FileReader(); // Read submited image as Array to feed it to the model
-	    fr.onload = () => getImageData(fr);
-	    fr.readAsArrayBuffer(files[0]);
-	}
-    else if (!FileReader){alert("Sorry! :(\nCannot load image: no HTML5 File API support.\nMaybe your browser is too old.")}
+    if (files && files.length) {
+        // Read submited image as URL to display it
+        fr.readAsDataURL(files[0]);
+	// Read submited image as Array to feed it to the model
+	fr.readAsArrayBuffer(files[0]);
+    }
     else {alert("Sorry! :(\n Cannot load image: something is wrong with the submited file.")}
-}
 
-function run2(){
     document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)"
 
-    image = tf.tensor2d(image);
+    console.log(inputImage);
+
+    inputImage = tf.tensor2d(inputImage);
 }
 
 init().then(() => {
