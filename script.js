@@ -7,7 +7,7 @@ function progress(fraction){
 }
 
 async function init(){
-    document.getElementById("subm").style.visibility="hidden";
+    //document.getElementById("subm").style.visibility="hidden";
     
     generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
 }
