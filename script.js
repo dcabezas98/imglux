@@ -1,7 +1,7 @@
 
 var generator;
 var tgt, files;
-var image, height, width;
+var inputImage;
 var canvas, ctx;
 
 function progress(fraction){
@@ -24,27 +24,25 @@ async function init(){
 
 function showImage(fileReader) {
     var img = document.getElementById("inimg");
-    img.onload = () => getImageData(img);
     img.src = fileReader.result;
+    ctx.drawImage(img, 0, 0);
 }
 
-function getImageData(img) {
-    ctx.drawImage(img, 0, 0);
-    height = img.height;
-    width = img.width;
-    image = ctx.getImageData(0, 0, img.width, img.height).data;
-    console.log("image data:", image);
-    run2();
+function getImageData(fileReader) {
+    inputImage = reader.result;
 }
 
 function run(){
     // FileReader support
 	if (FileReader && files && files.length) {
-            var fr = new FileReader();
+            var fr = new FileReader(); // Read submited image as URL to display it
             fr.onload = () => showImage(fr);
             fr.readAsDataURL(files[0]);
+	    fr = new FileReader(); // Read submited image as Array to feed it to the model
+	    fr.onload = () => getImageData(fr);
+	    fr.readAsArrayBuffer(files[0]);
 	}
-    else if (!FileReader){alert("Sorry! :(\nCannot load image: no FileReader support.")}
+    else if (!FileReader){alert("Sorry! :(\nCannot load image: no HTML5 File API support.\nMaybe your browser is too old.")}
     else {alert("Sorry! :(\n Cannot load image: something is wrong with the submited file.")}
 }
 
