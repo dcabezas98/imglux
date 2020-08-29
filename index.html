@@ -15,11 +15,13 @@
 
     <p id="prog"></p>
     
-    <form id="subm" action="javascript:;" onsubmit="run(this);" style="visibility:hidden">
+    <form id="subm" action="javascript:;" onsubmit="run(this.files);" style="visibility:hidden">
       <label for="img">Select image:</label>
       <input type="file" accept=".jpg, .jpeg, .png, .tiff, .tif" id="img" name="img"/>
       <input type="submit" name="Submit" value="Submit"/>
     </form>
+
+    <div id="show_selected_image"></div>
 
     <img id="out_img"/>
 
