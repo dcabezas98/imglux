@@ -1,5 +1,8 @@
 
-var generator;
+var generator, tgt, files, image;
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext("2d");
+
 
 function progress(fraction){
     document.getElementById("prog").innerHTML = "Loading model: "+parseInt(fraction*100).toString()+" %";
@@ -7,18 +10,36 @@ function progress(fraction){
 
 async function init(){
     //document.getElementById("subm").style.visibility="hidden";
+
+    document.getElementById("img").onchange = function (evt){
+	tgt = evt.target || window.event.srcElement;
+	files = tgt.files;	
+    }
     
     generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
 }
 
-function onFileLoad(e) {
-    $('#show_selected_image').html('<img src="'+e.target.result +'"/>');
+function showImage(fileReader) {
+    var img = document.getElementById("out_img");
+    img.onload = () => getImageData(img);
+    img.src = fileReader.result;
 }
 
-function run(files){
-    var reader = new FileReader();
-    reader.onload = onFileLoad;
-    reader.readAsDataURL(files[0]);
+function getImageData(img) {
+    ctx.drawImage(img, 0, 0);
+    imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+    console.log("image data:", image);
+}
+
+function run(){
+    // FileReader support
+	if (FileReader && files && files.length) {
+            var fr = new FileReader();
+            fr.onload = () => showImage(fr);
+            fr.readAsDataURL(files[0]);
+	}
+    else if (!FileReader){alert("Sorry! :(<br/> Cannot load image: no FileReader support.")}
+    else {alert("Sorry! :(<br/> Cannot load image: something is wrong with the submited file.")}
 }
 
 init().then(() => {
