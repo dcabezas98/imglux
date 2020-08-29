@@ -12,16 +12,16 @@ async function init(){
 }
 
 function run(inimg){
-    console.log(typeof(inimg));
+    document.getElementById("out_img")=inimg;
 }
 
 init().then(() => {
-    document.getElementById("prog").innerHTML = "READY! :D<br/>The model has been loaded, you can now submit a dark photo to light it up.";
+    document.getElementById("prog").innerHTML = "READY!  :D<br/>The model has been loaded successfully, you can now submit a dark photo to light it up.";
     //console.log(generator.summary());
 
     document.getElementById("subm").style.visibility="visible";
 }, () => {
-    document.getElementById("prog").innerHTML = "Oh No! :(<br/>An error occurred while loading the model. Please refresh the page.";
+    document.getElementById("prog").innerHTML = "Oh No!  :(<br/>An error occurred while loading the model. Please refresh this page.";
 });
 
 
