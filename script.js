@@ -15,7 +15,7 @@ function onFileLoad(e) {
     $('#show_selected_image').html('<img src="'+e.target.result +'"/>');
 }
 
-function run(){
+function run(files){
     var reader = new FileReader();
     reader.onload = onFileLoad;
     reader.readAsDataURL(files[0]);
