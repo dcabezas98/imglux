@@ -14,7 +14,8 @@ async function init(){
 
     generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
 
-    canvas = document.createElement("canvas");
+    canvas = document.getElementById("canvas");
+    //canvas = document.createElement("canvas");
     ctx = canvas.getContext("2d");
     
     document.getElementById("img").onchange = function (evt){
@@ -41,22 +42,13 @@ function showImage(fileReader) {
     //img.src = fileReader.result;
 }
 
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-}
-
 function getImageData(img) {
-    ctx.drawImage(img, 0,0, 0, 0);
     imgWidth=img.width;
     imgHeight=img.height;
     console.log("imgWidth: "+imgWidth);
     console.log("imgHeight: "+imgHeight);
-    imageData = ctx.getImageData(0,0, imgWidth, imgHeight).data;
+    ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
+    imageData = ctx.getImageData(0,0, imgWidth, imgHeight);
 }
 
 function run(){
@@ -69,7 +61,7 @@ function run(){
 
     document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)"
 
-    inputImage = imageData.toString();
+    inputImage = imageData.data.toString();
 
     console.log(inputImage);
 
