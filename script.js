@@ -2,6 +2,7 @@
 var generator;
 var tgt, files;
 var imageData, inputImage;
+var inputTensor;
 var canvas, ctx;
 var fr, fr2;
 var ready=false;
@@ -77,6 +78,8 @@ function run(){
     }
 
     inputTensor=tf.tensor3d(inputImage,[imageData.height,imageData.width,3],'float32');
+    
+    imageData = null;
     
     
     ready=true;
