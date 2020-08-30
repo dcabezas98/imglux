@@ -45,8 +45,8 @@ function showImage(fileReader) {
 }
 
 function getImageData(img) {
-    imgWidth=img.width;
-    imgHeight=img.height;
+    var imgWidth=img.width;
+    var imgHeight=img.height;
     console.log("imgWidth: "+imgWidth);
     console.log("imgHeight: "+imgHeight);
     ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
@@ -55,23 +55,24 @@ function getImageData(img) {
 
 function run(){
     
-    if (!ready) // Avoid double submit calling double run
-	return;
+    if (!ready) return; // Avoid double submit calling double run
     ready=false;
     
     // FileReader support
     if (files && files.length)
         fr.readAsDataURL(files[0]);
     else {
-	alert("Sorry! :(\n Cannot load image: something is wrong with the submited file.");
-	return}
+	alert("Sorry! :(\nCannot load image: something is wrong with the submited file.");
+	ready = true;
+	return;
+    }
 
     document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)"
 
     while(!imageData);
     inputImage=new Float32Array();
 
-    for(var i=0; i<imageData.data.lenght; i+=4){
+    for(var i=0; i<imageData.data.length; i+=4){
 	inputImage.push(imageData.data[i])/127.5-1;
 	inputImage.push(imageData.data[i+1])/127.5-1;
 	inputImage.push(imageData.data[i+2])/127.5-1;
