@@ -4,6 +4,7 @@ var tgt, files;
 var imageData, inputImage;
 var canvas, ctx;
 var fr, fr2;
+var ready=false;
 
 function progress(fraction){
     document.getElementById("prog").innerHTML = "Loading model: "+parseInt(fraction*100).toString()+" %. Please wait.";
@@ -14,8 +15,9 @@ async function init(){
 
     generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
 
-    canvas = document.getElementById("canvas");
-    //canvas = document.createElement("canvas");
+    canvas = document.createElement("canvas");
+    canvas.width=6400;
+    canvas.height=6400;
     ctx = canvas.getContext("2d");
     
     document.getElementById("img").onchange = function (evt){
@@ -28,18 +30,17 @@ async function init(){
 	fr.onload = () => showImage(fr);
     }
     else{
-	alert("Sorry! :(\nCannot load image: no HTML5 File API support.\nMaybe your browser is too old.");
+	alert("Sorry! :(\nNo HTML5 File API support.\nMaybe your browser is too old.");
 	return;
     }
 }
 
 function showImage(fileReader) {
     var imgDisplay = document.getElementById("inimg");
-    //var img = document.getElementById("auximg");
-    imgDisplay.onload = () => getImageData(imgDisplay);
-    //img.onload = () => getImageData(img);
+    var auximg = document.createElement("img");
+    auximg.onload = () => getImageData(auximg);
     imgDisplay.src = fileReader.result;
-    //img.src = fileReader.result;
+    auximg.src = fileReader.result;
 }
 
 function getImageData(img) {
@@ -52,6 +53,11 @@ function getImageData(img) {
 }
 
 function run(){
+    
+    if (!ready) // Avoid double submit calling double run
+	return;
+    ready=false;
+    
     // FileReader support
     if (files && files.length)
         fr.readAsDataURL(files[0]);
@@ -61,17 +67,25 @@ function run(){
 
     document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)"
 
-    inputImage = imageData.data.toString();
+    while(!imageData);
+    inputImage=new Float32Array();
 
-    console.log(inputImage);
+    for(var i=0; i<imageData.data.lenght; i+=4){
+	inputImage.push(imageData.data[i])/127.5-1;
+	inputImage.push(imageData.data[i+1])/127.5-1;
+	inputImage.push(imageData.data[i+2])/127.5-1;
+    }
 
-    inputImage = tf.tensor2d(inputImage);
+    inputTensor=tf.tensor3d(inputImage,[imageData.height,imageData.width,3],'float32');
+    
+    
+    ready=true;
 }
 
 init().then(() => {
     document.getElementById("prog").innerHTML = "READY!  :D<br/>The model has been loaded successfully, you can now submit a dark photo to light it up.";
     //console.log(generator.summary());
-
+    ready=true;
     document.getElementById("subm").style.visibility="visible";
 }, () => {
     document.getElementById("prog").innerHTML = "Oh No!  :(<br/>An error occurred while loading the model. Please refresh this page.";
