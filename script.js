@@ -51,6 +51,7 @@ function getImageData(img) {
     console.log("imgHeight: "+imgHeight);
     ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
     imageData = ctx.getImageData(0,0, imgWidth, imgHeight);
+    run2();
 }
 
 function run(){
@@ -66,16 +67,21 @@ function run(){
 	ready = true;
 	return;
     }
+}
 
-    document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)"
+function run2(){
+    
+    document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)";
+    
+    console.log("ImageDATA");
+    console.log(imageData);
+    
+    inputImage=new Float32Array(imageData.height*imageData.width*3);
 
-    while(!imageData);
-    inputImage=new Float32Array();
-
-    for(var i=0; i<imageData.data.length; i+=4){
-	inputImage.push(imageData.data[i])/127.5-1;
-	inputImage.push(imageData.data[i+1])/127.5-1;
-	inputImage.push(imageData.data[i+2])/127.5-1;
+    for(var i=0, j=0; i<imageData.data.length; i+=4, j+=3){
+	inputImage[j]=imageData.data[i]/127.5-1;
+	inputImage[j+1]=imageData.data[i+1]/127.5-1;
+	inputImage[j+2]=imageData.data[i+2]/127.5-1;
     }
 
     inputTensor=tf.tensor3d(inputImage,[imageData.height,imageData.width,3],'float32');
