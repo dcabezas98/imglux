@@ -17,8 +17,8 @@ async function init(){
     generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
 
     canvas = document.createElement("canvas");
-    canvas.width=6400;
-    canvas.height=6400;
+    canvas.width=3200;
+    canvas.height=3200;
     ctx = canvas.getContext("2d");
     
     document.getElementById("img").onchange = function (evt){
@@ -75,7 +75,7 @@ function run2(){
     console.log("ImageDATA");
     console.log(imageData);
 
-    /*
+     // Slower, but do not require WebGL support
     inputImage=new Float32Array(imageData.height*imageData.width*3);
 
     for(var i=0, j=0; i<imageData.data.length; i+=4, j+=3){
@@ -85,19 +85,19 @@ function run2(){
     }
 
     inputTensor=tf.tensor4d(inputImage,[1,imageData.height,imageData.width,3],'float32');
-    */
+     //
 
-    // Si esto funciona, es más eficiente que lo de arriba
+    /* // Faster, but require WebGL support
     inputTensor=tf.browser.fromPixels(imageData);
     inputTensor=tf.reshape(inputTensor, [1,imageData.height,imageData.width,3]);
-    //
-    
     inputTensor=inputTensor.div(tf.scalar(127.5)).sub(tf.scalar(1));
+     / */
     
     inputTensor=tf.image.resizeNearestNeighbor(inputTensor,[1024,1536]); // TODO: ajustar shape o dar a elegir 
 
     outputTensor=generator.predict(inputTensor, training=true);
-    
+
+        
     
     document.getElementById("working").innerHTML = "Here you go! Click here to download full resolution image:"; 
     
