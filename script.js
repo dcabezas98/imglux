@@ -31,7 +31,7 @@ async function init(){
 	fr.onload = () => showImage(fr);
     }
     else{
-	alert("Sorry! :(\nNo HTML5 File API support.\nMaybe your browser is too old.");
+	alert("Sorry!  :(\nNo HTML5 File API support.\nMaybe your browser is too old.");
 	return;
     }
 }
@@ -56,14 +56,13 @@ function getImageData(img) {
 
 function run(){
     
-    if (!ready) return; // Avoid double submit calling double run
+    if (!ready) return; // Prevents multiple submission from run more than once
     ready=false;
     
-    // FileReader support
     if (files && files.length)
         fr.readAsDataURL(files[0]);
     else {
-	alert("Sorry! :(\nCannot load image: something is wrong with the submited file.");
+	alert("Sorry!  :(\nCannot load image: something is wrong with the submited file.");
 	ready = true;
 	return;
     }
@@ -75,7 +74,8 @@ function run2(){
     
     console.log("ImageDATA");
     console.log(imageData);
-    
+
+    /*
     inputImage=new Float32Array(imageData.height*imageData.width*3);
 
     for(var i=0, j=0; i<imageData.data.length; i+=4, j+=3){
@@ -84,17 +84,28 @@ function run2(){
 	inputImage[j+2]=imageData.data[i+2]/127.5-1;
     }
 
-    inputTensor=tf.tensor3d(inputImage,[imageData.height,imageData.width,3],'float32');
+    inputTensor=tf.tensor4d(inputImage,[1,imageData.height,imageData.width,3],'float32');
+    */
+
+    // Si esto funciona, es más eficiente que lo de arriba
+    inputTensor=tf.browser.fromPixels(imageData);
+    inputTensor=tf.reshape(inputTensor, [1,imageData.height,imageData.width,3]);
+    //
     
-    imageData = null;
+    inputTensor=inputTensor.div(tf.scalar(127.5)).sub(tf.scalar(1));
     
+    inputTensor=tf.image.resizeNearestNeighbor(inputTensor,[1024,1536]); // TODO: ajustar shape o dar a elegir 
+
+    outputTensor=generator.predict(inputTensor, training=true);
+    
+    
+    document.getElementById("working").innerHTML = "Here you go! Click here to download full resolution image:"; 
     
     ready=true;
 }
 
 init().then(() => {
     document.getElementById("prog").innerHTML = "READY!  :D<br/>The model has been loaded successfully, you can now submit a dark photo to light it up.";
-    //console.log(generator.summary());
     ready=true;
     document.getElementById("subm").style.visibility="visible";
 }, () => {
