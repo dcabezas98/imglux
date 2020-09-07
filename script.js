@@ -93,13 +93,17 @@ function run2(){
     inputTensor=inputTensor.div(tf.scalar(127.5)).sub(tf.scalar(1));
      //
     
-    inputTensor=tf.image.resizeNearestNeighbor(inputTensor,[1024,1536]); // TODO: ajustar shape o dar a elegir 
+    inputTensor=tf.image.resizeNearestNeighbor(inputTensor,[1024,1536]); // TODO: ajustar shape o dar a elegir
 
-    //outputTensor=generator.predict(inputTensor, training=true);
-
-        
+    outputTensor=generator.predict(inputTensor, training=true);
     
-    document.getElementById("working").innerHTML = "Here you go! Click here to download full resolution image:"; 
+    outputTensor=outputTensor.div(tf.scalar(2)).add(tf.scalar(0.5));
+    outputTensor=outputTensor.squeeze();
+
+    var outCanvas = document.getElementById("outCanvas");
+    tf.browser.toPixels(outputTensor, outCanvas);
+    
+    document.getElementById("working").innerHTML = "Here you go!"; // Click here to download full resolution image:"; 
     
     ready=true;
 }
