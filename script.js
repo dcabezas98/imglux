@@ -1,10 +1,10 @@
 
 var generator;
 var tgt, files;
-var imageData, inputImage;
-var inputTensor;
+var imageData;
+var inputTensor, outputTensor;
 var canvas, ctx;
-var fr, fr2;
+var fr;
 var ready=false;
 
 function progress(fraction){
@@ -75,27 +75,27 @@ function run2(){
     console.log("ImageDATA");
     console.log(imageData);
 
-     // Slower, but do not require WebGL support
-    inputImage=new Float32Array(imageData.height*imageData.width*3);
+    /* // Slower, but do not require WebGL support
+    var inputArray=new Float32Array(imageData.height*imageData.width*3);
 
     for(var i=0, j=0; i<imageData.data.length; i+=4, j+=3){
-	inputImage[j]=imageData.data[i]/127.5-1;
-	inputImage[j+1]=imageData.data[i+1]/127.5-1;
-	inputImage[j+2]=imageData.data[i+2]/127.5-1;
+	inputArray[j]=imageData.data[i]/127.5-1;
+	inputArray[j+1]=imageData.data[i+1]/127.5-1;
+	inputArray[j+2]=imageData.data[i+2]/127.5-1;
     }
 
-    inputTensor=tf.tensor4d(inputImage,[1,imageData.height,imageData.width,3],'float32');
-     //
+    inputTensor=tf.tensor4d(inputArray,[1,imageData.height,imageData.width,3],'float32');
+     // */
 
-    /* // Faster, but require WebGL support
+     // Faster, but require WebGL support
     inputTensor=tf.browser.fromPixels(imageData);
     inputTensor=tf.reshape(inputTensor, [1,imageData.height,imageData.width,3]);
     inputTensor=inputTensor.div(tf.scalar(127.5)).sub(tf.scalar(1));
-     / */
+     //
     
     inputTensor=tf.image.resizeNearestNeighbor(inputTensor,[1024,1536]); // TODO: ajustar shape o dar a elegir 
 
-    outputTensor=generator.predict(inputTensor, training=true);
+    //outputTensor=generator.predict(inputTensor, training=true);
 
         
     
