@@ -17,8 +17,8 @@ async function init(){
     generator = await tf.loadLayersModel('./TFJS_GAN-generator/model.json', {strict : false, onProgress : progress});
 
     canvas = document.createElement("canvas");
-    canvas.width=3200;
-    canvas.height=3200;
+    canvas.width=6400;
+    canvas.height=6400;
     ctx = canvas.getContext("2d");
     
     document.getElementById("img").onchange = function (evt){
@@ -104,6 +104,7 @@ function run2(){
     ready=true;
 }
 
+/*
 init().then(() => {
     document.getElementById("prog").innerHTML = "READY!  :D<br/>The model has been loaded successfully, you can now submit a dark photo to light it up.";
     ready=true;
@@ -111,3 +112,4 @@ init().then(() => {
 }, () => {
     document.getElementById("prog").innerHTML = "Oh No!  :(<br/>An error occurred while loading the model. Please refresh this page.";
 });
+*/
