@@ -27,7 +27,7 @@ async function init(){
 	files = tgt.files;	
     }
 
-    outCanvas; = document.getElementById("outCanvas");
+    outCanvas = document.getElementById("outCanvas");
     outCtx = outCanvas.getContext("2d");
 
     if (FileReader){
