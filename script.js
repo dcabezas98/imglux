@@ -4,6 +4,7 @@ var tgt, files;
 var imageData;
 var inputTensor, outputTensor;
 var canvas, ctx;
+var outCanvas, outCtx;
 var fr;
 var ready=false;
 
@@ -26,6 +27,9 @@ async function init(){
 	files = tgt.files;	
     }
 
+    outCanvas; = document.getElementById("outCanvas");
+    outCtx = outCanvas.getContext("2d");
+
     if (FileReader){
 	fr = new FileReader();
 	fr.onload = () => showImage(fr);
@@ -47,8 +51,6 @@ function showImage(fileReader) {
 function getImageData(img) {
     var imgWidth=img.width;
     var imgHeight=img.height;
-    console.log("imgWidth: "+imgWidth);
-    console.log("imgHeight: "+imgHeight);
     ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
     imageData = ctx.getImageData(0,0, imgWidth, imgHeight);
     run2();
@@ -58,6 +60,9 @@ function run(){
     
     if (!ready) return; // Prevents multiple submission from run more than once
     ready=false;
+
+    document.getElementById("working").innerHTML = "";
+    outCtx.clearRect(0, 0, outCanvas.width, outCanvas.height); // Clear output canvas
     
     if (files && files.length)
         fr.readAsDataURL(files[0]);
@@ -71,36 +76,19 @@ function run(){
 function run2(){
     
     document.getElementById("working").innerHTML = "Your image is being processed, please wait. :)";
-    
-    console.log("ImageDATA");
-    console.log(imageData);
 
-    /* // Slower, but do not require WebGL support
-    var inputArray=new Float32Array(imageData.height*imageData.width*3);
-
-    for(var i=0, j=0; i<imageData.data.length; i+=4, j+=3){
-	inputArray[j]=imageData.data[i]/127.5-1;
-	inputArray[j+1]=imageData.data[i+1]/127.5-1;
-	inputArray[j+2]=imageData.data[i+2]/127.5-1;
-    }
-
-    inputTensor=tf.tensor4d(inputArray,[1,imageData.height,imageData.width,3],'float32');
-     // */
-
-     // Faster, but require WebGL support
     inputTensor=tf.browser.fromPixels(imageData);
     inputTensor=tf.reshape(inputTensor, [1,imageData.height,imageData.width,3]);
     inputTensor=inputTensor.div(tf.scalar(127.5)).sub(tf.scalar(1));
      //
     
-    inputTensor=tf.image.resizeNearestNeighbor(inputTensor,[1024,1536]); // TODO: ajustar shape o dar a elegir
+    inputTensor=tf.image.resizeNearestNeighbor(inputTensor,[512,768]); // TODO: ajustar shape o dar a elegir
 
     outputTensor=generator.predict(inputTensor, training=true);
     
     outputTensor=outputTensor.div(tf.scalar(2)).add(tf.scalar(0.5));
     outputTensor=outputTensor.squeeze();
 
-    var outCanvas = document.getElementById("outCanvas");
     tf.browser.toPixels(outputTensor, outCanvas);
     
     document.getElementById("working").innerHTML = "Here you go!"; // Click here to download full resolution image:"; 
